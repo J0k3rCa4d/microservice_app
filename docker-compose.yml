@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-CU13-ubuntu-20.04
+    environment:
+      SA_PASSWORD: 1244Pass_
+      ACCEPT_EULA: Y
+    ports:
+      - 1433:1433
+
+  api:
+    image: api
+    build:
+      context: ./Api
+      dockerfile: Dockerfile
+    ports:
+      - 8888:80
+    depends_on:
+      - db
+
+  calculator:
+    image: calculator
+    build: 
+      context: ./Calculator
+      dockerfile: Dockerfile
+    environment:
+      DB_PASS: 1244Pass_
+      DB_HOST: db
+    ports: 
+      - 8889:8889
+    depends_on: 
+      - db
+
+  
